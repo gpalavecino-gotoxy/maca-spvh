@@ -198,7 +198,7 @@ def grafico_torta_estados_matplotlib(
 
     for autotext in autotexts:
         autotext.set_fontsize(9)
-        autotext.set_color("white")
+        autotext.set_color("#333333")  # dark neutral — readable on both light and dark slices
         autotext.set_fontweight("bold")
 
     ax.set_title(titulo, fontsize=14, fontweight="bold", pad=15, color="#333333")
