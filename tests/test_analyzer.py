@@ -3,7 +3,6 @@ Tests de src/data/analyzer.py usando el Excel real de HUMITOS.
 """
 from pathlib import Path
 
-import pandas as pd
 import pytest
 
 from src.data.loader import cargar_excel

@@ -92,12 +92,9 @@ def agrupar_estados_para_informe(df: pd.DataFrame) -> dict:
         return {}
 
     grupos: dict[str, int] = {}
-    for estado in df["ESTADO"]:
-        if estado is None:
-            grupo = "Otros"
-        else:
-            grupo = _ESTADO_A_GRUPO.get(str(estado).strip().upper(), "Otros")
-        grupos[grupo] = grupos.get(grupo, 0) + 1
+    for estado, count in df["ESTADO"].value_counts(dropna=False).items():
+        grupo = _ESTADO_A_GRUPO.get(str(estado).strip().upper() if estado is not None else "", "Otros")
+        grupos[grupo] = grupos.get(grupo, 0) + int(count)
 
     return {
         grupo: {
@@ -153,11 +150,9 @@ _AMOUNT_PATTERNS = [
 
 def _parse_amount(raw: str) -> float | None:
     """Convierte una cadena con formato de peso argentino a float."""
-    # Quitar el símbolo $ si estuviera incluido
     raw = raw.replace("$", "").strip()
 
-    # Detectar si la coma es separador decimal (ej. "1.234,56") o si el punto lo es
-    # Heurística: si hay coma, la coma es decimal; los puntos son miles
+    # Heurística: si hay coma, la coma es decimal y los puntos son miles (ej. "1.234,56")
     if "," in raw:
         raw = raw.replace(".", "").replace(",", ".")
     else:
@@ -189,7 +184,7 @@ def extraer_montos_deuda(df: pd.DataFrame) -> dict | None:
     """
     estados_relevantes = {"DEUDA", "CANCELADO", "CANCELADO-PP"}
     mask = df["ESTADO"].isin(estados_relevantes)
-    subset = df[mask].copy()
+    subset = df[mask]
 
     montos: list[float] = []
     lotes_con_monto = 0

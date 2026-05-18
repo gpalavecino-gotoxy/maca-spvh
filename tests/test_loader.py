@@ -3,12 +3,10 @@ Tests de integración para src/data/loader.py usando el Excel real.
 """
 from pathlib import Path
 
-import pandas as pd
 import pytest
 
 from src.data.loader import cargar_excel
 
-# Ruta al Excel real (relativa al directorio del proyecto)
 EXCEL_PATH = Path(__file__).parent.parent / "excel" / "HUMITOS TOTAL.xlsx"
 
 EXPECTED_COLUMNS = ["TITULAR", "COTITULAR", "LOTE", "DIRECCION", "ESTADO", "OBSERVACIONES", "MANZANA"]
@@ -16,7 +14,6 @@ EXPECTED_COLUMNS = ["TITULAR", "COTITULAR", "LOTE", "DIRECCION", "ESTADO", "OBSE
 
 @pytest.fixture(scope="module")
 def df():
-    """DataFrame cargado una sola vez para todos los tests del módulo."""
     return cargar_excel(EXCEL_PATH)
 
 
