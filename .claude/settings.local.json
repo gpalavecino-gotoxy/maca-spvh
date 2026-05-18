@@ -19,7 +19,9 @@
       "PowerShell(Get-ChildItem \"C:\\\\Projects\\\\Myself\\\\maca\" -Depth 4 | Where-Object { -not $_.PSIsContainer } | Select-Object FullName)",
       "PowerShell(& \"C:\\\\Projects\\\\Myself\\\\maca\\\\.venv\\\\Scripts\\\\python\" -c \"import docx; print\\('python-docx OK:', docx.__version__\\)\")",
       "PowerShell(& \"C:\\\\Projects\\\\Myself\\\\maca\\\\.venv\\\\Scripts\\\\python\" -c \"import docx2pdf; print\\('docx2pdf OK'\\)\" 2>&1)",
-      "Bash(.venv\\\\Scripts\\\\pytest tests/ -q)"
+      "Bash(.venv\\\\Scripts\\\\pytest tests/ -q)",
+      "Skill(superpowers:finishing-a-development-branch)",
+      "Bash(git merge *)"
     ]
   }
 }
