@@ -13,14 +13,14 @@ _EXPECTED_COLUMNS = ["TITULAR", "COTITULAR", "LOTE", "DIRECCION", "ESTADO", "OBS
 _SHEET_PATTERN = re.compile(r"^Manzana\s+\d+$", re.IGNORECASE)
 
 
-def cargar_excel(path: str | Path) -> pd.DataFrame:
+def cargar_excel(path: str | Path | object) -> pd.DataFrame:
     """
     Lee un archivo Excel con hojas tipo 'Manzana N' y devuelve un DataFrame unificado.
 
     Parámetros
     ----------
-    path : str | Path
-        Ruta al archivo Excel.
+    path : str | Path | file-like
+        Ruta al archivo Excel o un objeto file-like (ej. UploadedFile de Streamlit).
 
     Retorna
     -------
@@ -34,20 +34,22 @@ def cargar_excel(path: str | Path) -> pd.DataFrame:
         Si el archivo no puede leerse, no tiene hojas 'Manzana N', o alguna
         hoja no tiene las columnas requeridas.
     """
-    path = Path(path)
+    # Aceptar tanto rutas como objetos file-like (UploadedFile de Streamlit)
+    source = path if hasattr(path, "read") else Path(path)
+    label = getattr(path, "name", str(path))
 
     try:
-        wb = openpyxl.load_workbook(path, data_only=True)
+        wb = openpyxl.load_workbook(source, data_only=True)
     except Exception as exc:
         raise ValueError(
-            f"No se pudo leer el archivo '{path}': {exc}"
+            f"No se pudo leer el archivo '{label}': {exc}"
         ) from exc
 
     manzana_sheets = [name for name in wb.sheetnames if _SHEET_PATTERN.match(name)]
 
     if not manzana_sheets:
         raise ValueError(
-            f"No se encontraron hojas con formato 'Manzana N' en '{path}'. "
+            f"No se encontraron hojas con formato 'Manzana N' en '{label}'. "
             f"Hojas disponibles: {wb.sheetnames}"
         )
 
