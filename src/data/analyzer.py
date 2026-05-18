@@ -199,11 +199,12 @@ def extraer_montos_deuda(df: pd.DataFrame) -> dict | None:
                 found_in_row.append(val)
 
         # Si no encontró con $, intentar números sueltos grandes
+        # Excluir años (1900-2100) que no son montos
         if not found_in_row:
             for m in _AMOUNT_PATTERNS[1].finditer(obs):
                 raw = m.group(1)
                 val = _parse_amount(raw)
-                if val is not None and val > 999:
+                if val is not None and val > 999 and not (1900 <= val <= 2100):
                     found_in_row.append(val)
 
         if found_in_row:
