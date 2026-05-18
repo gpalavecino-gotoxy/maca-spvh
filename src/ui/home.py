@@ -25,12 +25,10 @@ _MESES_ES = {
 }
 
 
-def _fecha_hoy_es() -> str:
-    """Devuelve la fecha de hoy en formato español, p.ej. '18 de mayo de 2026'."""
-    hoy = datetime.date.today()
-    mes_en = hoy.strftime("%B")
-    mes_es = _MESES_ES.get(mes_en, mes_en.lower())
-    return hoy.strftime(f"%d de {mes_es} de %Y")
+def _fecha_a_es(d: datetime.date) -> str:
+    """Convierte un datetime.date a formato español, p.ej. '18 de mayo de 2026'."""
+    mes_es = _MESES_ES.get(d.strftime("%B"), d.strftime("%B").lower())
+    return d.strftime(f"%d de {mes_es} de %Y")
 
 
 def render() -> None:
@@ -46,10 +44,12 @@ def render() -> None:
         value=st.session_state.get("nombre_barrio", ""),
     )
 
-    fecha = st.text_input(
+    fecha_date = st.date_input(
         "Fecha del informe",
-        value=st.session_state.get("fecha", _fecha_hoy_es()),
+        value=st.session_state.get("_fecha_date", datetime.date.today()),
+        format="DD/MM/YYYY",
     )
+    fecha = _fecha_a_es(fecha_date)
 
     incluir_detalle = st.checkbox(
         "Incluir detalle completo por manzana en el informe Word",
@@ -62,8 +62,6 @@ def render() -> None:
             st.error("Por favor, suba un archivo Excel antes de continuar.")
         elif not nombre_barrio.strip():
             st.error("Por favor, ingrese el nombre del barrio.")
-        elif not fecha.strip():
-            st.error("Por favor, ingrese la fecha del informe.")
         else:
             try:
                 df = cargar_excel(uploaded_file)
@@ -73,6 +71,7 @@ def render() -> None:
                 st.session_state.df = df
                 st.session_state.nombre_barrio = nombre_barrio.strip()
                 st.session_state.fecha = fecha
+                st.session_state._fecha_date = fecha_date
                 st.session_state.incluir_detalle = incluir_detalle
                 st.session_state._docx_bytes = None
                 st.session_state._pdf_bytes = None
