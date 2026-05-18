@@ -14,6 +14,10 @@ if "fecha" not in st.session_state:
     st.session_state.fecha = ""
 if "incluir_detalle" not in st.session_state:
     st.session_state.incluir_detalle = False
+if "_docx_bytes" not in st.session_state:
+    st.session_state._docx_bytes = None
+if "_pdf_bytes" not in st.session_state:
+    st.session_state._pdf_bytes = None
 
 from src.ui import dashboard, export, home  # noqa: E402
 

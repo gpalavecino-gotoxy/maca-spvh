@@ -80,8 +80,7 @@ def render() -> None:
     if filtro_manzana != "Todas":
         filtered_df = filtered_df[filtered_df["MANZANA"] == filtro_manzana]
 
-    if filtro_estados:
-        filtered_df = filtered_df[filtered_df["ESTADO"].isin(filtro_estados)]
+    filtered_df = filtered_df[filtered_df["ESTADO"].isin(filtro_estados)]
 
     if busqueda.strip():
         term = busqueda.strip().lower()

@@ -62,6 +62,8 @@ def render() -> None:
             st.error("Por favor, suba un archivo Excel antes de continuar.")
         elif not nombre_barrio.strip():
             st.error("Por favor, ingrese el nombre del barrio.")
+        elif not fecha.strip():
+            st.error("Por favor, ingrese la fecha del informe.")
         else:
             try:
                 df = cargar_excel(uploaded_file)
@@ -72,6 +74,8 @@ def render() -> None:
                 st.session_state.nombre_barrio = nombre_barrio.strip()
                 st.session_state.fecha = fecha
                 st.session_state.incluir_detalle = incluir_detalle
+                st.session_state._docx_bytes = None
+                st.session_state._pdf_bytes = None
                 st.success(
                     f"✓ {len(df)} lotes cargados de {nombre_barrio.strip()}"
                 )
