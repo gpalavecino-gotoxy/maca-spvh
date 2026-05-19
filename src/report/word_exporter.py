@@ -28,8 +28,8 @@ from src.report.narrative import armar_narrativa
 
 # Ruta base del proyecto (dos niveles arriba de este archivo: src/report → raíz)
 _BASE_DIR = Path(__file__).resolve().parent.parent.parent
-_LOGO_MUN = _BASE_DIR / "assets" / "logos" / "placeholder_municipalidad.png"
-_LOGO_SPVH = _BASE_DIR / "assets" / "logos" / "placeholder_spvh.png"
+_LOGO_MUN = _BASE_DIR / "assets" / "logos" / "logo muni.jpeg"
+_LOGO_SPVH = _BASE_DIR / "assets" / "logos" / "logo spv.jpeg"
 
 # ─── Helpers de estilo ────────────────────────────────────────────────────────
 
