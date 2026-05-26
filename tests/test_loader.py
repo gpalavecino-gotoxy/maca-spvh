@@ -69,3 +69,60 @@ def test_raises_on_invalid_path():
 def test_six_manzanas_loaded(df):
     """Deben cargarse exactamente 6 manzanas."""
     assert df["MANZANA"].nunique() == 6
+
+
+# ─── Tests formato Martinez Estrada (hoja única plana) ───────────────────────
+
+MARTINEZ_PATH = Path(__file__).parent.parent / "excel" / "MARTINEZ ESTRADA TODOSdrive.xlsx"
+
+
+@pytest.fixture(scope="module")
+def df_martinez():
+    return cargar_excel(MARTINEZ_PATH)
+
+
+def test_martinez_total_rows(df_martinez):
+    """157 filas de datos (fila Total filtrada)."""
+    assert len(df_martinez) == 157, f"Se esperaban 157 filas, se encontraron {len(df_martinez)}"
+
+
+def test_martinez_columns_present(df_martinez):
+    """Debe tener las columnas estándar más LEGAJO."""
+    for col in EXPECTED_COLUMNS:
+        assert col in df_martinez.columns, f"Columna ausente: {col}"
+    assert "LEGAJO" in df_martinez.columns
+
+
+def test_martinez_manzana_values(df_martinez):
+    """MANZANA debe tener exactamente 5 valores: Manzana A a Manzana E."""
+    manzanas = sorted(df_martinez["MANZANA"].unique())
+    assert manzanas == ["Manzana A", "Manzana B", "Manzana C", "Manzana D", "Manzana E"]
+
+
+def test_martinez_estado_values(df_martinez):
+    """ESTADO solo debe contener ESCRITURADO y NO ESCRITURADO."""
+    estados = set(df_martinez["ESTADO"].dropna().unique())
+    assert estados == {"ESCRITURADO", "NO ESCRITURADO"}
+
+
+def test_martinez_estado_normalized(df_martinez):
+    """Los valores de ESTADO deben estar en mayúsculas y sin espacios."""
+    for estado in df_martinez["ESTADO"].dropna():
+        assert estado == estado.strip().upper(), f"ESTADO no normalizado: {estado!r}"
+
+
+def test_martinez_titular_split(df_martinez):
+    """Rows con ' - ' en TITULARES deben tener COTITULAR poblado."""
+    has_cotitular = df_martinez["COTITULAR"].notna().sum()
+    assert has_cotitular > 0, "Se esperaba al menos una fila con COTITULAR"
+
+
+def test_martinez_total_row_filtered(df_martinez):
+    """La fila 'Total' no debe aparecer en los datos."""
+    titulares_lower = df_martinez["TITULAR"].astype(str).str.strip().str.lower()
+    assert not (titulares_lower == "total").any()
+
+
+def test_martinez_manzana_column_populated(df_martinez):
+    """Todas las filas deben tener MANZANA poblado."""
+    assert df_martinez["MANZANA"].notna().all()

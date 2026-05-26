@@ -199,3 +199,55 @@ def test_extraer_montos_total_coherente(df):
     result = extraer_montos_deuda(df)
     if result is not None:
         assert abs(result["total_estimado"] - sum(result["montos_detectados"])) < 0.01
+
+
+# ─── Tests con datos Martinez Estrada ────────────────────────────────────────
+
+MARTINEZ_PATH = Path(__file__).parent.parent / "excel" / "MARTINEZ ESTRADA TODOSdrive.xlsx"
+
+
+@pytest.fixture(scope="module")
+def df_martinez():
+    return cargar_excel(MARTINEZ_PATH)
+
+
+def test_martinez_totales_por_estado(df_martinez):
+    """Debe tener exactamente dos estados: ESCRITURADO y NO ESCRITURADO."""
+    totales = totales_por_estado(df_martinez)
+    assert set(totales.keys()) == {"ESCRITURADO", "NO ESCRITURADO"}
+
+
+def test_martinez_agrupar_estados(df_martinez):
+    """Debe agrupar en Escriturados y No Escriturados, sin grupo Otros."""
+    grupos = agrupar_estados_para_informe(df_martinez)
+    assert "Escriturados" in grupos
+    assert "No Escriturados" in grupos
+    assert "Otros" not in grupos
+
+
+def test_martinez_agrupar_porcentajes_suman_100(df_martinez):
+    """Los porcentajes deben sumar ~100%."""
+    grupos = agrupar_estados_para_informe(df_martinez)
+    total_pct = sum(v["porcentaje"] for v in grupos.values())
+    assert abs(total_pct - 100.0) < 1.0
+
+
+def test_martinez_totales_por_manzana(df_martinez):
+    """Debe haber 5 manzanas y sumar 157 lotes."""
+    result = totales_por_manzana(df_martinez)
+    assert len(result) == 5
+    assert result["TOTAL"].sum() == 157
+
+
+def test_martinez_estado_por_manzana(df_martinez):
+    """Pivot debe tener 5 filas y columna ESCRITURADO."""
+    pivot = estado_por_manzana(df_martinez)
+    assert pivot.shape[0] == 5
+    assert "ESCRITURADO" in pivot.columns
+    assert not pivot.isnull().any().any()
+
+
+def test_martinez_montos_deuda_none(df_martinez):
+    """Sin estados DEUDA/CANCELADO, extraer_montos_deuda debe retornar None."""
+    result = extraer_montos_deuda(df_martinez)
+    assert result is None

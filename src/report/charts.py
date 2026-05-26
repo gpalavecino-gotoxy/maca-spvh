@@ -19,22 +19,24 @@ import plotly.graph_objects as go
 
 # Grupos de informe (salida de agrupar_estados_para_informe)
 _COLOR_GRUPO: dict[str, str] = {
-    "Escriturados": "#2E86AB",
-    "Cancelados":   "#A8DADC",
-    "Con Deuda":    "#E63946",
-    "Con Mejoras":  "#F4A261",
-    "Sin Datos":    "#ADB5BD",
-    "Otros":        "#6C757D",
+    "Escriturados":    "#2E86AB",
+    "No Escriturados": "#E07A5F",
+    "Cancelados":      "#A8DADC",
+    "Con Deuda":       "#E63946",
+    "Con Mejoras":     "#F4A261",
+    "Sin Datos":       "#ADB5BD",
+    "Otros":           "#6C757D",
 }
 
 # Estados crudos del DataFrame (salida de estado_por_manzana)
 _COLOR_ESTADO: dict[str, str] = {
-    "ESCRITURADO":  "#2E86AB",
-    "CANCELADO":    "#A8DADC",
-    "CANCELADO-PP": "#85C1E9",
-    "DEUDA":        "#E63946",
-    "MEJORAS":      "#F4A261",
-    "SIN DATOS":    "#ADB5BD",
+    "ESCRITURADO":    "#2E86AB",
+    "NO ESCRITURADO": "#E07A5F",
+    "CANCELADO":      "#A8DADC",
+    "CANCELADO-PP":   "#85C1E9",
+    "DEUDA":          "#E63946",
+    "MEJORAS":        "#F4A261",
+    "SIN DATOS":      "#ADB5BD",
 }
 _COLOR_ESTADO_DEFAULT = "#6C757D"
 

@@ -38,7 +38,11 @@ def render() -> None:
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("Total Lotes", total_lotes)
     col2.metric("% Escriturados", f"{pct_escriturados:.1f}%")
-    col3.metric("Lotes con Deuda", deuda_count)
+    if deuda_count == 0 and "NO ESCRITURADO" in df["ESTADO"].values:
+        no_escr_count = int((df["ESTADO"] == "NO ESCRITURADO").sum())
+        col3.metric("No Escriturados", no_escr_count)
+    else:
+        col3.metric("Lotes con Deuda", deuda_count)
     col4.metric("Manzanas", manzanas_count)
 
     # ── Gráficos ──────────────────────────────────────────────────────────────

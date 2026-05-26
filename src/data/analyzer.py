@@ -70,6 +70,7 @@ def estado_por_manzana(df: pd.DataFrame) -> pd.DataFrame:
 
 _ESTADO_A_GRUPO: dict[str, str] = {
     "ESCRITURADO": "Escriturados",
+    "NO ESCRITURADO": "No Escriturados",
     "CANCELADO": "Cancelados",
     "CANCELADO-PP": "Cancelados",
     "DEUDA": "Con Deuda",
