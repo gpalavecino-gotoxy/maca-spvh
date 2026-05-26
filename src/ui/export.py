@@ -56,17 +56,13 @@ def render() -> None:
 
     if st.button("Generar y descargar PDF", key="btn_pdf"):
         with st.spinner("Generando informe..."):
-            docx_bytes = generar_word(df, nombre_barrio, fecha, incluir_detalle)
-            pdf_bytes = generar_pdf(docx_bytes)
-
-        if pdf_bytes is None:
-            st.warning(
-                "No se pudo generar el PDF. "
-                "Asegúrese de tener Microsoft Word instalado."
-            )
-            st.session_state._pdf_bytes = None
-        else:
-            st.session_state._pdf_bytes = pdf_bytes
+            try:
+                docx_bytes = generar_word(df, nombre_barrio, fecha, incluir_detalle)
+                pdf_bytes = generar_pdf(docx_bytes)
+                st.session_state._pdf_bytes = pdf_bytes
+            except RuntimeError as exc:
+                st.error(f"No se pudo generar el PDF: {exc}")
+                st.session_state._pdf_bytes = None
 
     if st.session_state.get("_pdf_bytes") is not None:
         st.download_button(
